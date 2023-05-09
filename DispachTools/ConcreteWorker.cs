@@ -1,5 +1,4 @@
 ﻿using DispachTools.InternalMessages;
-using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,54 +8,38 @@ using System.Threading.Tasks;
 
 namespace DispachTools
 {
-    public class ConcreteWorker :BaseWorker
+    public class ConcreteWorker :BaseWorker,IMyMessageHandler
     {
       
-        Q.QManagment qManagment = null;
+       
         private SemaphoreSlim semPublishEvent = new SemaphoreSlim(1);
         private Thread HeartBeatThread = null;
-       public ConcreteWorker(string workerId , string dispacherId):base(workerId, dispacherId)
-       {
-          
+        BrokerHandler brokerHandler = null;
 
-            qManagment = new Q.QManagment(dispacherId);
-            qManagment.Init();
-            var message = this.ChengeState(WorkerStateCode.IamFree);
-            PublicEvent2Dispacher(message);
+       public ConcreteWorker(string workerId , string dispacherId):base(workerId,dispacherId)
+       {
+
+            brokerHandler = new BrokerHandler(dispacherId, this);
             HeartBeatThread = new Thread(new ThreadStart(HeartBeat));
             HeartBeatThread.Start();
 
 
-
+        
 
 
        }
 
-        public override void HanndelMessage(BaseMessage message, Action<BaseMessage> action)
+        public void HandleMessage(string Message)
         {
-            throw new NotImplementedException();
+           Console.WriteLine(Message);
         }
 
-        public void PublicEvent2Dispacher(WorkerStateMessage m)
-       {
-            semPublishEvent.Wait();
-            try 
-            {
-                qManagment.publish2DisPacher(m.ToJsonByteArray());
-
-            }
-            catch(Exception ex) { }
-            finally { semPublishEvent.Release(); }
-
-       }
-
-       private void HeartBeat()
+        private void HeartBeat()
         {
             while (!cts.IsCancellationRequested)
             {
                 var heartbeatMessage = CreateHeartBeat();
-                PublicEvent2Dispacher(heartbeatMessage);
-                Console.WriteLine(heartbeatMessage.ToJson());
+                brokerHandler.Publish(heartbeatMessage);
                 Thread.Sleep(500);
             }
         }

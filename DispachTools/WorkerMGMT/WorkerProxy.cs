@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DispachTools.WorkerMGMT
 {
-    internal class WorkerProxy:BaseWorker
+    internal class WorkerProxy:BaseWorker,IMyMessageHandler
     {
         private SemaphoreSlim WorkerSemaphore = new SemaphoreSlim(1);
         protected List<BaseMessage> AllRecivedMessage = new List<BaseMessage>();
@@ -20,34 +20,12 @@ namespace DispachTools.WorkerMGMT
 
         }
 
-        public override void HanndelMessage(BaseMessage message, Action<BaseMessage> action)
+    
+
+        public void HandleMessage(string Message)
         {
-            WorkerSemaphore.Wait();
-            try
-            {
-                if (message is WorkerStateMessage  )
-                {
-
-                    var workerStateMessage = (WorkerStateMessage)message;
-                    AllRecivedMessage.Add(workerStateMessage);
-                    WorkerChangeStateMessage.Add(workerStateMessage);
-                    this.ChengeState(workerStateMessage.WorkerState);
-
-                }
-                if (action != null)
-                {
-                    action(message);
-                }
-
-            }
-            catch (Exception ex)
-            {
-
-            }
-            finally { WorkerSemaphore.Release(); }
-
+            Console.WriteLine(Message); 
         }
-
     }
 }
 

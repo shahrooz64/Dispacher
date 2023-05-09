@@ -31,18 +31,9 @@ namespace DispachTools.InternalMessages
             else { return To; }
 
         }
+        public DateTime MessageDateTime { get; set; } = DateTime.Now;
 
-
-        DateTime MessageDateTime { get; set; } = DateTime.Now;
-
-        public byte[] ToJsonByteArray()
-        {
-            return Encoding.UTF8.GetBytes(ToJson());
-        }
-        public string ToJson()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
+          
 
     }
 }

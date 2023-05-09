@@ -83,11 +83,6 @@ namespace DispachTools
         }
 
 
-      
-        public abstract void HanndelMessage(BaseMessage message, Action<BaseMessage> action);
-     
-
-
         public void Stop()
         {
             cts.Cancel();

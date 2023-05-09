@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DispachTools.WorkerMGMT
 {
-    internal class WorkerCollection
+    internal class WorkerCollection:IMyMessageHandler
     {
         private WorkerCollection() { }
 
@@ -25,7 +25,7 @@ namespace DispachTools.WorkerMGMT
         Dictionary<string, WorkerProxy> dicworkers = new Dictionary<string, WorkerProxy>();
         SemaphoreSlim _Sem_workers = new SemaphoreSlim(1);
 
-        public void HandelWorkerMessage(WorkerStateMessage message)
+        private void HandelWorkerMessage(WorkerStateMessage message)
         {
             _Sem_workers.Wait();
             try
@@ -39,10 +39,13 @@ namespace DispachTools.WorkerMGMT
                 _Sem_workers.Release();
             }
 
-            dicworkers[message.GetWorkerId()].HanndelMessage(message, null);
+           // dicworkers[message.GetWorkerId()].HanndelMessage(message, null);
         }
 
-
+        public void HandleMessage(string message)
+        {
+           Console.WriteLine(message);
+        }
     }
 
 }
