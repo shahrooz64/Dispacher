@@ -12,12 +12,12 @@ namespace DispachTools
 {
     public class Dispach_Server:IMyMessageHandler
     {
-        string _DisacherId;
+        DisPachingConfig config = null;
         BrokerHandler _brokerHandler = null;
-        public Dispach_Server(string dispacherId)
+        public Dispach_Server(DisPachingConfig config)
         {
-           this._DisacherId = dispacherId;
-            _brokerHandler = new BrokerHandler(_DisacherId, this);
+           this.config = config;
+            _brokerHandler = new BrokerHandler(config,this);
             
 
 
@@ -25,9 +25,14 @@ namespace DispachTools
 
         public void HandleMessage(string Message)
         {
-            Console.WriteLine(Message);
+            var baseMessage = JsonConvert.DeserializeObject<BaseMessage>(Message);
+            if (baseMessage.IsValidMessage(config.MyName, Message))
+            {
+                Console.WriteLine(Message);
+            }
         }
 
+      
         public void Start()
         {
             

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace DispachTools
 {
@@ -12,14 +13,14 @@ namespace DispachTools
     {
       
        
-        private SemaphoreSlim semPublishEvent = new SemaphoreSlim(1);
+      
         private Thread HeartBeatThread = null;
         BrokerHandler brokerHandler = null;
 
-       public ConcreteWorker(string workerId , string dispacherId):base(workerId,dispacherId)
+       public ConcreteWorker(DisPachingConfig config):base(config)
        {
 
-            brokerHandler = new BrokerHandler(dispacherId, this);
+            brokerHandler = new BrokerHandler(config, this);
             HeartBeatThread = new Thread(new ThreadStart(HeartBeat));
             HeartBeatThread.Start();
 
@@ -29,18 +30,24 @@ namespace DispachTools
 
        }
 
-        public void HandleMessage(string Message)
+        public virtual void HandleMessage(string Message)
         {
-           Console.WriteLine(Message);
-        }
+            var baseMessage = JsonConvert.DeserializeObject<BaseMessage>(Message);
+            if (baseMessage.IsValidMessage(config.MyName, Message))
+            {
+                Console.WriteLine(Message);
+            }
 
+
+         
+        }
         private void HeartBeat()
         {
             while (!cts.IsCancellationRequested)
             {
                 var heartbeatMessage = CreateHeartBeat();
                 brokerHandler.Publish(heartbeatMessage);
-                Thread.Sleep(500);
+                Thread.Sleep(1000);
             }
         }
 

@@ -25,27 +25,29 @@ namespace DispachTools.WorkerMGMT
         Dictionary<string, WorkerProxy> dicworkers = new Dictionary<string, WorkerProxy>();
         SemaphoreSlim _Sem_workers = new SemaphoreSlim(1);
 
-        private void HandelWorkerMessage(WorkerStateMessage message)
-        {
-            _Sem_workers.Wait();
-            try
-            {
-                if (!dicworkers.ContainsKey(message.GetWorkerId()))
-                    dicworkers.Add(message.GetWorkerId(),  new WorkerProxy(message.GetWorkerId(), message.GetDispacherID()));
+        //private void HandelWorkerMessage(WorkerStateMessage message)
+        //{
+        //    _Sem_workers.Wait();
+        //    try
+        //    {
+        //        if (!dicworkers.ContainsKey(message.GetWorkerId()))
+        //            dicworkers.Add(message.GetWorkerId(),  new WorkerProxy(message.GetWorkerId(), message.GetDispacherID()));
                    
-            }
-            finally
-            {
-                _Sem_workers.Release();
-            }
+        //    }
+        //    finally
+        //    {
+        //        _Sem_workers.Release();
+        //    }
 
-           // dicworkers[message.GetWorkerId()].HanndelMessage(message, null);
-        }
+        //   // dicworkers[message.GetWorkerId()].HanndelMessage(message, null);
+        //}
 
         public void HandleMessage(string message)
         {
            Console.WriteLine(message);
         }
+
+       
     }
 
 }

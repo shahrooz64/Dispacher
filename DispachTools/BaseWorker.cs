@@ -12,26 +12,22 @@ namespace DispachTools
     {
         protected BaseWorker() { }
 
-        public string WorkerId  { get; private set; }
-        public string DispacherId { get; private set; }
-       
+        public DisPachingConfig config = null;
 
-        private SemaphoreSlim WorkerSemaphore = new SemaphoreSlim(1);
-        private  DispachTools.InternalMessages.WorkerStateCode _WorkerState = WorkerStateCode.Null;
+       
+        private  DispachTools.InternalMessages.StateCode _WorkerState = DispachTools.InternalMessages.StateCode.Null;
         protected CancellationTokenSource cts = new CancellationTokenSource();
 
-        public  BaseWorker(string workerId,string dispacherId)
+        public  BaseWorker(DisPachingConfig config)
         {
-          
-            DispacherId=dispacherId;
-            WorkerId = workerId;
+          this.config = config;
           
         }
 
-        public WorkerStateMessage ChengeState(WorkerStateCode state)
+        public StateMessage ChengeState(StateCode state)
         {
-            WorkerSemaphore.Wait();
-            WorkerStateMessage result = null;
+          
+            StateMessage result = null;
             try
             {
                 _WorkerState = state;
@@ -39,45 +35,34 @@ namespace DispachTools
             }
             finally
             {
-                WorkerSemaphore.Release();
+               
             }
             return result;
 
         }
-        private WorkerStateMessage CreateChangeStateEvent()
+        private StateMessage CreateChangeStateEvent()
         {
-            var message = new WorkerStateMessage();
-            message.From = WorkerId;
-            message.To = DispacherId;
+            var message = new StateMessage();
+            message.From = config.MyName;          
             message.WorkerState = _WorkerState;
-            message.Direction = MessageDirection.W2D;
+            message.To = config.DispacherName;
             message.IsHeartBeat = false;
             return message;
         }
 
 
-        public DispachTools.InternalMessages.WorkerStateCode GetState() 
+        public StateCode GetState() 
         {
-            WorkerSemaphore.Wait();
-            try
-            {
-                return _WorkerState;
-            }
-            finally
-            {
-                WorkerSemaphore.Release();
-            }
-        
+           return _WorkerState;
         }
 
 
-        public  WorkerStateMessage CreateHeartBeat()
+        public  StateMessage CreateHeartBeat()
         {
-            var message = new WorkerStateMessage();
-            message.From = WorkerId;
-            message.To = DispacherId;
+            var message = new StateMessage();
+            message.From = config.MyName;          
             message.WorkerState = GetState();
-            message.Direction = MessageDirection.W2D;
+            message.To = config.DispacherName;
             message.IsHeartBeat = true;
             return message;
         }

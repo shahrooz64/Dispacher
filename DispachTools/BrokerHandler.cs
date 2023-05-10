@@ -14,8 +14,8 @@ namespace DispachTools
     public class BrokerHandler
     {
         private static string KafkaServers = "beta-agent-2:9093";
-        string _DispacherId = "";
-        string _DisPacherName = "";
+
+        DisPachingConfig config = null;
         private ProducerConfig ProducerConfig { get; set; }
         private ConsumerConfig ConsumerConfig { get; set; }
         private IConsumer<Ignore,string> consumer { get; set; }
@@ -23,11 +23,10 @@ namespace DispachTools
 
         protected CancellationTokenSource cts = new CancellationTokenSource();
         IMyMessageHandler _handler = null;
-
-        public BrokerHandler(string DispacherID,IMyMessageHandler handler)
+        private SemaphoreSlim semPublishEvent = new SemaphoreSlim(1);
+        public BrokerHandler(DisPachingConfig config,IMyMessageHandler handler)
         {
-            
-            _DispacherId = DispacherID;
+            this.config = config;         
             _handler = handler;
             
             Init();
@@ -35,11 +34,7 @@ namespace DispachTools
             ThreadConSumer.Start(); 
 
         }
-        public string Get_ManagmentTopic()
-        {
-            return string.Concat(_DispacherId, "_ManagmentTopic" );
-        }
-
+        
 
         private void Init()
         {
@@ -61,7 +56,7 @@ namespace DispachTools
                 {
                     new TopicSpecification()
                     {
-                        Name = Get_ManagmentTopic(),
+                        Name = config.Topic,
                         NumPartitions = 1,
                         ReplicationFactor = 2,
                         Configs = new Dictionary<string,string>()
@@ -86,13 +81,13 @@ namespace DispachTools
                 SaslUsername = "kafka",
                 SaslPassword = "rvm9nYNzrD4MTkKt",
                 AutoOffsetReset = AutoOffsetReset.Earliest,
-                GroupId = Get_ManagmentTopic()+"_Consumer_"+Guid.NewGuid().ToString(),
+                GroupId =config.GetKafkaConsumerGroupId(),
                 PartitionAssignmentStrategy = PartitionAssignmentStrategy.RoundRobin,
                 AllowAutoCreateTopics = true,
                 
             };
             consumer = new ConsumerBuilder<Ignore,string>(consumerConfig).Build();
-            consumer.Subscribe(Get_ManagmentTopic());
+            consumer.Subscribe(config.Topic);
 
 
             ProducerConfig = new ProducerConfig
@@ -114,14 +109,25 @@ namespace DispachTools
 
         public void Publish(BaseMessage message)
         {
-
-            var jsonMessage = JsonConvert.SerializeObject(message);
-
-            using (var producer = new ProducerBuilder<Null, string>(ProducerConfig).SetErrorHandler(ProducerErrorHandler).Build())
+            semPublishEvent.Wait();
+            try
             {
-                producer.Produce(Get_ManagmentTopic(), new Message<Null, string>()
+               
+                using (var producer = new ProducerBuilder<Null, string>(ProducerConfig).SetErrorHandler(ProducerErrorHandler).Build())
                 {
-                    Value = jsonMessage                         }, ProducerDeliveryHandler);
+                    producer.Produce(config.Topic, new Message<Null, string>()
+                    {
+                        Value = message.ToJson()
+                    }, ProducerDeliveryHandler);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                semPublishEvent.Release();
             }
 
 

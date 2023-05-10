@@ -6,20 +6,24 @@ using System.Threading.Tasks;
 
 namespace DispachTools.InternalMessages
 {
-    public enum WorkerStateCode
+
+    
+    public enum StateCode
     {
        Null=0,
        IamFree=1,
       
        
     }
-
-    public enum MessageDirection
+    public enum MesseageType
     {
-        D2W=0,
-        W2D=1,
+        Null=0,
+        StateMessage = 1,
+      
     }
 
+
+  
    
 
 }

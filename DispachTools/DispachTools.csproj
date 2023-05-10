@@ -70,13 +70,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseWorker.cs" />
+    <Compile Include="DisPachingConfig.cs" />
     <Compile Include="Dispach_Server.cs" />
     <Compile Include="IMyMessageHandler.cs" />
     <Compile Include="InternalMessages\BaseMessage.cs" />
     <Compile Include="InternalMessages\Enums.cs" />
-    <Compile Include="InternalMessages\InternalMessage.cs" />
-    <Compile Include="InternalMessages\TaskDone.cs" />
-    <Compile Include="InternalMessages\WorkerStateMessage.cs" />
+    <Compile Include="InternalMessages\StateMessage.cs" />
     <Compile Include="BrokerHandler.cs" />
     <Compile Include="ConcreteWorker.cs" />
     <Compile Include="MessageFactory.cs" />

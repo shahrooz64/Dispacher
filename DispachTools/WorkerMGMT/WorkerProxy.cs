@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace DispachTools.WorkerMGMT
 {
-    internal class WorkerProxy:BaseWorker,IMyMessageHandler
+    internal class WorkerProxy:BaseWorker
     {
         private SemaphoreSlim WorkerSemaphore = new SemaphoreSlim(1);
         protected List<BaseMessage> AllRecivedMessage = new List<BaseMessage>();
-        protected List<WorkerStateMessage> WorkerChangeStateMessage = new List<WorkerStateMessage>();
-        public WorkerProxy(string workerId,string dispacherId) : base(workerId, dispacherId)
+        protected List<StateMessage> WorkerChangeStateMessage = new List<StateMessage>();
+        public WorkerProxy(DisPachingConfig config) : base(config)
         {
 
            
@@ -26,6 +26,8 @@ namespace DispachTools.WorkerMGMT
         {
             Console.WriteLine(Message); 
         }
+
+       
     }
 }
 

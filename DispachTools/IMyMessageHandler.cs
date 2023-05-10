@@ -9,6 +9,7 @@ namespace DispachTools
 {
     public interface IMyMessageHandler
     {
+     
        void HandleMessage(string message );
     }
 }

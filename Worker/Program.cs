@@ -9,7 +9,8 @@ namespace Worker
 {
     internal class Program
     {
-        static ConcreteWorker baseWorker= new ConcreteWorker(Guid.NewGuid().ToString(), "Test");
+        static DisPachingConfig configuration = new DisPachingConfig() { MyName = "W1", Topic = "Test",IsWorker=true,DispacherName="D1" };
+        static ConcreteWorker baseWorker= new ConcreteWorker(configuration);
         static void Main(string[] args)
         {
             

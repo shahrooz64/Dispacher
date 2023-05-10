@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace DispachTools.InternalMessages
 {
-    
-    public class TaskDone:BaseMessage
+    public class StateMessage:BaseMessage
     {
-    
+        public StateCode WorkerState { get; set; } = StateCode.Null;
+        public bool  IsHeartBeat=false;
+        
+      
+
     }
 }
