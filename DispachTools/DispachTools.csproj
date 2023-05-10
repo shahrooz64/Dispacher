@@ -73,9 +73,9 @@
     <Compile Include="DisPachingConfig.cs" />
     <Compile Include="Dispach_Server.cs" />
     <Compile Include="IMyMessageHandler.cs" />
-    <Compile Include="InternalMessages\BaseMessage.cs" />
-    <Compile Include="InternalMessages\Enums.cs" />
-    <Compile Include="InternalMessages\StateMessage.cs" />
+    <Compile Include="Messages\BaseMessage.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Messages\WorkerStateMessage.cs" />
     <Compile Include="BrokerHandler.cs" />
     <Compile Include="ConcreteWorker.cs" />
     <Compile Include="MessageFactory.cs" />

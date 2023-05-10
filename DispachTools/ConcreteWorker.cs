@@ -1,4 +1,4 @@
-﻿using DispachTools.InternalMessages;
+﻿using DispachTools.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +21,7 @@ namespace DispachTools
        {
 
             brokerHandler = new BrokerHandler(config, this);
+             
             HeartBeatThread = new Thread(new ThreadStart(HeartBeat));
             HeartBeatThread.Start();
 

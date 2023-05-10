@@ -1,4 +1,4 @@
-﻿using DispachTools.InternalMessages;
+﻿using DispachTools.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +12,8 @@ namespace DispachTools.WorkerMGMT
     {
         private SemaphoreSlim WorkerSemaphore = new SemaphoreSlim(1);
         protected List<BaseMessage> AllRecivedMessage = new List<BaseMessage>();
-        protected List<StateMessage> WorkerChangeStateMessage = new List<StateMessage>();
-        public WorkerProxy(DisPachingConfig config) : base(config)
+        protected List<WorkerStateMessage> WorkerChangeStateMessage = new List<WorkerStateMessage>();
+        public WorkerProxy(DisPachingConfig config) 
         {
 
            

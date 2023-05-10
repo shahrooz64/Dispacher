@@ -1,4 +1,4 @@
-﻿using DispachTools.InternalMessages;
+﻿using DispachTools.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace DispachTools
         public DisPachingConfig config = null;
 
        
-        private  DispachTools.InternalMessages.StateCode _WorkerState = DispachTools.InternalMessages.StateCode.Null;
+        private StateCode _WorkerState =StateCode.Null;
         protected CancellationTokenSource cts = new CancellationTokenSource();
 
         public  BaseWorker(DisPachingConfig config)
@@ -24,28 +24,25 @@ namespace DispachTools
           
         }
 
-        public StateMessage ChengeState(StateCode state)
+        public WorkerStateMessage ChengeState(StateCode state)
         {
-          
-            StateMessage result = null;
-            try
+
+            WorkerStateMessage result = null;
+            lock (this)
             {
                 _WorkerState = state;
                 result = CreateChangeStateEvent();
             }
-            finally
-            {
-               
-            }
+           
             return result;
 
         }
-        private StateMessage CreateChangeStateEvent()
+        private WorkerStateMessage CreateChangeStateEvent()
         {
-            var message = new StateMessage();
+            var message = new WorkerStateMessage();
             message.From = config.MyName;          
             message.WorkerState = _WorkerState;
-            message.To = config.DispacherName;
+            message.SenderType = config.MyType;
             message.IsHeartBeat = false;
             return message;
         }
@@ -53,16 +50,19 @@ namespace DispachTools
 
         public StateCode GetState() 
         {
-           return _WorkerState;
+            lock (this)
+            {
+                return _WorkerState;
+            }
         }
 
 
-        public  StateMessage CreateHeartBeat()
+        public WorkerStateMessage CreateHeartBeat()
         {
-            var message = new StateMessage();
+            var message = new WorkerStateMessage();
             message.From = config.MyName;          
             message.WorkerState = GetState();
-            message.To = config.DispacherName;
+            message.SenderType = config.MyType;
             message.IsHeartBeat = true;
             return message;
         }

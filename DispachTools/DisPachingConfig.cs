@@ -9,9 +9,8 @@ namespace DispachTools
     public  class DisPachingConfig
     {
         public string MyName = "";
-        public string DispacherName = "";
         public string Topic = "";
-        public bool IsWorker=true;
+        public  DispachingEntityType      MyType=DispachingEntityType.Null;
 
         public string GetKafkaConsumerGroupId()
         {

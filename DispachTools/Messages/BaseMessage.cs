@@ -5,14 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DispachTools.InternalMessages
+namespace DispachTools.Messages
 {
     public class BaseMessage
     {
 
         public string From { get; set; }
-        public string To { get; set; }
+        //public string To { get; set; }
         public MesseageType MesseageType { get; set; } = MesseageType.Null;
+        public DispachingEntityType SenderType { get; set; }= DispachingEntityType.Null;
         public DateTime MessageDateTime { get; set; } = DateTime.Now;
                 
       
@@ -33,10 +34,6 @@ namespace DispachTools.InternalMessages
             var baseMessage = JsonConvert.DeserializeObject<BaseMessage>(message);
             if(DateTime.Now.Subtract ( baseMessage.MessageDateTime).TotalMinutes>5) return false;
             if (MyName.Equals(baseMessage.From)) return false;
-            if (MyName.Equals(baseMessage.To) || baseMessage.To == "*")
-            {
-                    return true;
-            }
             
             return false;
 

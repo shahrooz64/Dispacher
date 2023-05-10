@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DispachTools.InternalMessages
+namespace DispachTools
 {
 
     
@@ -15,10 +15,20 @@ namespace DispachTools.InternalMessages
       
        
     }
+    public enum DispachingEntityType
+    {
+        Null = 0,
+        Worker=1,
+        Dispacher=2,
+
+
+    }
+
+
     public enum MesseageType
     {
         Null=0,
-        StateMessage = 1,
+        WorkerStateMessage = 1,
       
     }
 

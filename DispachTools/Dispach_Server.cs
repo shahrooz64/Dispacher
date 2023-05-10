@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using DispachTools.InternalMessages;
+using DispachTools.Messages;
+using DispachTools.WorkerMGMT;
 
 namespace DispachTools
 {
@@ -28,7 +29,10 @@ namespace DispachTools
             var baseMessage = JsonConvert.DeserializeObject<BaseMessage>(Message);
             if (baseMessage.IsValidMessage(config.MyName, Message))
             {
-                Console.WriteLine(Message);
+                if (baseMessage.SenderType == DispachingEntityType.Worker)
+                {
+                    WorkerCollection.Instance.HandleMessage(Message);
+                }
             }
         }
 

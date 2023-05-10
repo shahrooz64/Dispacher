@@ -9,7 +9,7 @@ namespace Server
 {
     internal class Program
     {
-        static DisPachingConfig configuration = new DisPachingConfig() { MyName = "D1", Topic = "Test", IsWorker = false ,DispacherName="D1" };
+        static DisPachingConfig configuration = new DisPachingConfig() { MyName = "D1", Topic = "Test", MyType = DispachingEntityType.Dispacher  };
         private static DispachTools.Dispach_Server DisPacherServer = new DispachTools.Dispach_Server(configuration);
         static void Main(string[] args)
         {

@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
 using Confluent.Kafka.Admin;
-using DispachTools.InternalMessages;
+using DispachTools.Messages;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
