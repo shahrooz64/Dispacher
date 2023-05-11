@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using JsonSubTypes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,38 +8,31 @@ using System.Threading.Tasks;
 
 namespace DispachTools.Messages
 {
+    [JsonConverter(typeof(JsonSubtypes), "Type")]
+    [JsonSubtypes.KnownSubType(typeof(WorkerStateMessage), nameof(WorkerStateMessage))]
     public class BaseMessage
     {
-
+        public virtual string Type { get; } =nameof(BaseMessage);
         public string From { get; set; }
         //public string To { get; set; }
-        public MesseageType MesseageType { get; set; } = MesseageType.Null;
         public DispachingEntityType SenderType { get; set; }= DispachingEntityType.Null;
         public DateTime MessageDateTime { get; set; } = DateTime.Now;
-                
-      
         public string ToJson()
         {
             return JsonConvert.SerializeObject(this);
         }
-        
-        
-
-
 
     }
-    public static class BaseMessageExtensions
+
+    public class WorkerStateMessage : BaseMessage
     {
-        public static bool IsValidMessage(this BaseMessage This,string MyName , string message)
-        {
-            var baseMessage = JsonConvert.DeserializeObject<BaseMessage>(message);
-            if(DateTime.Now.Subtract ( baseMessage.MessageDateTime).TotalMinutes>5) return false;
-            if (MyName.Equals(baseMessage.From)) return false;
-            
-            return false;
+        public override string Type { get; } = nameof(WorkerStateMessage);
+        public StateCode WorkerState { get; set; } = StateCode.Null;
+        public bool IsHeartBeat = false;
 
 
-        }
+
     }
+
 
 }

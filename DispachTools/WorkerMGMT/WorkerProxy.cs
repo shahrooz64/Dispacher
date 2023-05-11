@@ -22,9 +22,9 @@ namespace DispachTools.WorkerMGMT
 
     
 
-        public void HandleMessage(string Message)
+        public void HandleMessage(BaseMessage baseMessage)
         {
-            Console.WriteLine(Message); 
+          
         }
 
        

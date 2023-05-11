@@ -27,12 +27,10 @@ namespace DispachTools
         public void HandleMessage(string Message)
         {
             var baseMessage = JsonConvert.DeserializeObject<BaseMessage>(Message);
-            if (baseMessage.IsValidMessage(config.MyName, Message))
+            if (baseMessage.IsValidMessage(config.MyName,null ,Message))
             {
-                if (baseMessage.SenderType == DispachingEntityType.Worker)
-                {
-                    WorkerCollection.Instance.HandleMessage(Message);
-                }
+                WorkerCollection.Instance.HandleMessage(Message);
+              
             }
         }
 

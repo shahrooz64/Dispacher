@@ -34,7 +34,7 @@ namespace DispachTools
         public virtual void HandleMessage(string Message)
         {
             var baseMessage = JsonConvert.DeserializeObject<BaseMessage>(Message);
-            if (baseMessage.IsValidMessage(config.MyName, Message))
+            if (baseMessage.IsValidMessage(config.MyName,null, Message))
             {
                 Console.WriteLine(Message);
             }

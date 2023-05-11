@@ -44,7 +44,11 @@ namespace DispachTools.WorkerMGMT
 
         public void HandleMessage(string message)
         {
-           Console.WriteLine(message);
+          
+            lock (this)
+            {
+                Console.WriteLine(message);
+            }
         }
 
        

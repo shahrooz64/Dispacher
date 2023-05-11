@@ -37,6 +37,9 @@
     <Reference Include="Confluent.Kafka, Version=1.8.2.0, Culture=neutral, PublicKeyToken=12c514ca49093d1e, processorArchitecture=MSIL">
       <HintPath>..\packages\Confluent.Kafka.1.8.2\lib\net46\Confluent.Kafka.dll</HintPath>
     </Reference>
+    <Reference Include="JsonSubTypes, Version=2.0.1.0, Culture=neutral, PublicKeyToken=ee75fc290dbc1176, processorArchitecture=MSIL">
+      <HintPath>..\packages\JsonSubTypes.2.0.1\lib\net46\JsonSubTypes.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -75,10 +78,9 @@
     <Compile Include="IMyMessageHandler.cs" />
     <Compile Include="Messages\BaseMessage.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="Messages\WorkerStateMessage.cs" />
+    <Compile Include="Messages\MessageEx.cs" />
     <Compile Include="BrokerHandler.cs" />
     <Compile Include="ConcreteWorker.cs" />
-    <Compile Include="MessageFactory.cs" />
     <Compile Include="WorkerMGMT\WorkerProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkerMGMT\WorkerCollection.cs" />
