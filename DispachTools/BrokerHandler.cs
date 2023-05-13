@@ -13,7 +13,10 @@ namespace DispachTools
 {
     public class BrokerHandler
     {
-        private static string KafkaServers = "beta-agent-2:9093";
+        private static string KafkaServers = "";
+        private static string userName="";
+        private static string pass = "";
+
 
         DisPachingConfig config = null;
         private ProducerConfig ProducerConfig { get; set; }
@@ -46,8 +49,8 @@ namespace DispachTools
                     SaslMechanism = SaslMechanism.Plain,
                     SecurityProtocol = SecurityProtocol.SaslPlaintext,
                     Acks = Acks.All,
-                    SaslUsername = "kafka",
-                    SaslPassword = "rvm9nYNzrD4MTkKt",
+                    SaslUsername =userName,
+                    SaslPassword = pass,
 
                 };
                 IAdminClient admin = new AdminClientBuilder(adminConfig).Build();
@@ -78,8 +81,8 @@ namespace DispachTools
                 BootstrapServers = KafkaServers,
                 SaslMechanism = SaslMechanism.Plain,
                 SecurityProtocol = SecurityProtocol.SaslPlaintext,
-                SaslUsername = "kafka",
-                SaslPassword = "rvm9nYNzrD4MTkKt",
+                SaslUsername = userName,
+                SaslPassword = pass,
                 AutoOffsetReset = AutoOffsetReset.Earliest,
                 GroupId =config.GetKafkaConsumerGroupId(),
                 PartitionAssignmentStrategy = PartitionAssignmentStrategy.RoundRobin,
@@ -97,8 +100,8 @@ namespace DispachTools
                 SecurityProtocol = SecurityProtocol.SaslPlaintext,
                 Partitioner = Partitioner.Consistent,
                 Acks = Acks.All,
-                SaslUsername = "kafka",
-                SaslPassword = "rvm9nYNzrD4MTkKt",
+                SaslUsername = userName,
+                SaslPassword = pass,
                 MessageTimeoutMs = 0,
                 RetryBackoffMs = 100,
                 EnableIdempotence = true,
