@@ -16,7 +16,7 @@ namespace TestProject1
           WorkerStateMessage msg= new WorkerStateMessage();
           string json =msg.ToJson();
             var b = MessageEx.ParsMessage(json,  out var obj);
-            Assert.IsTrue(obj!=null);
+        
 
 
 

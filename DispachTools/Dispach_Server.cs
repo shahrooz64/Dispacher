@@ -15,6 +15,7 @@ namespace DispachTools
     {
         DisPachingConfig config = null;
         BrokerHandler _brokerHandler = null;
+        Dictionary<string, WorkerProxy> dicworkers = new Dictionary<string, WorkerProxy>();
         public Dispach_Server(DisPachingConfig config)
         {
            this.config = config;
@@ -24,16 +25,36 @@ namespace DispachTools
 
         }
 
-        public void HandleMessage(string Message)
+        public void HandleMessage(BaseMessage objMessage)
         {
-            var baseMessage = JsonConvert.DeserializeObject<BaseMessage>(Message);
-            if (baseMessage.IsValidMessage(config.MyName,null ,Message))
+
+            lock (this)
             {
-                WorkerCollection.Instance.HandleMessage(Message);
-              
+                HandelWorkerStateMesssage(objMessage);
+                
+
+
+
+
             }
         }
 
+        private void HandelWorkerStateMesssage(BaseMessage objMessage)
+        {
+            if ( objMessage.SenderType == DispachingEntityType.Worker && (objMessage is WorkerStateMessage)  )
+            {
+                if (!dicworkers.ContainsKey(objMessage.From))
+                {
+                    var WorkerConfig = (DisPachingConfig)this.config.Clone();
+                    WorkerConfig.MyName = objMessage.From;
+                    dicworkers.Add(objMessage.From, new WorkerProxy(WorkerConfig));
+                }
+            }
+
+        }
+
+
+      
       
         public void Start()
         {

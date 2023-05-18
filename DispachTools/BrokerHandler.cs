@@ -64,7 +64,7 @@ namespace DispachTools
                         ReplicationFactor = 2,
                         Configs = new Dictionary<string,string>()
                         {
-                            ["retention.ms"] = TimeSpan.FromMinutes(1).TotalMilliseconds.ToString()
+                            ["retention.ms"] = 180000.ToString(),
                         },
                     }
                 });
@@ -173,10 +173,12 @@ namespace DispachTools
             {
                 try
                 {
-                    var result = consumer.Consume();
+                    var result = consumer.Consume(3000);
+
                     if (_handler != null)
                     {
-                        _handler.HandleMessage(result.Message.Value);
+                        var messageObj = MessageEx.ParsMessage(result?.Message?.Value);
+                        _handler.HandleMessage(messageObj);
                     }
                     
                 }
@@ -186,8 +188,6 @@ namespace DispachTools
                     break;
                 }
             }
-
-
 
         }
 

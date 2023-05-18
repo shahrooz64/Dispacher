@@ -10,7 +10,7 @@ namespace DispachTools
 {
     public abstract class  BaseWorker
     {
-        protected BaseWorker() { }
+        private BaseWorker() { }
 
         public DisPachingConfig config = null;
 
@@ -43,7 +43,7 @@ namespace DispachTools
             message.From = config.MyName;          
             message.WorkerState = _WorkerState;
             message.SenderType = config.MyType;
-            message.IsHeartBeat = false;
+           
             return message;
         }
 
@@ -57,21 +57,11 @@ namespace DispachTools
         }
 
 
-        public WorkerStateMessage CreateHeartBeat()
-        {
-            var message = new WorkerStateMessage();
-            message.From = config.MyName;          
-            message.WorkerState = GetState();
-            message.SenderType = config.MyType;
-            message.IsHeartBeat = true;
-            return message;
-        }
-
-
         public void Stop()
         {
             cts.Cancel();
         }
 
+     
     }
 }

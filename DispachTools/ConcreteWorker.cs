@@ -13,8 +13,7 @@ namespace DispachTools
     {
       
        
-      
-        private Thread HeartBeatThread = null;
+     
         BrokerHandler brokerHandler = null;
 
        public ConcreteWorker(DisPachingConfig config):base(config)
@@ -22,8 +21,7 @@ namespace DispachTools
 
             brokerHandler = new BrokerHandler(config, this);
              
-            HeartBeatThread = new Thread(new ThreadStart(HeartBeat));
-            HeartBeatThread.Start();
+        
 
 
         
@@ -31,33 +29,15 @@ namespace DispachTools
 
        }
 
-        public virtual void HandleMessage(string Message)
-        {
-            var baseMessage = JsonConvert.DeserializeObject<BaseMessage>(Message);
-            if (baseMessage.IsValidMessage(config.MyName,null, Message))
-            {
-                Console.WriteLine(Message);
-            }
+      
 
-
-         
-        }
-        private void HeartBeat()
+        public void HandleMessage(BaseMessage objmessage)
         {
-            while (!cts.IsCancellationRequested)
+            if (objmessage!=null && objmessage is Command)
             {
-                var heartbeatMessage = CreateHeartBeat();
-                brokerHandler.Publish(heartbeatMessage);
-                Thread.Sleep(1000);
+
             }
         }
-
-       
-
-
-
-
-
     }
 }
  
